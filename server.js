@@ -16,7 +16,7 @@ const db = mysql.createPool({
   host: "sql10.freesqldatabase.com",
   user: "sql10799195",
   password: "rT9BIiqNUY",
-  database: "sql10799195",
+  database: "sql1079995",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
