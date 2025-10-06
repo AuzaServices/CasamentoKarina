@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <link rel="icon" href="https://i.imgur.com/lw1nRbq.png" type="image/png">
+  <meta charset="UTF-8">
+  <title>Lista de Presentes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fdfaf9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .formulario {
+      max-width: 825px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(200, 150, 170, 0.3);
+      padding: 30px;
+    }
+
+    h1 {
+      color: #922826;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 32px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      color: #333;
+      font-weight: bold;
+      font-size: 35px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 16px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .presentes {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .botao-presente {
+      width: 100%;
+      padding: 25px;
+      background-color: #922826;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 40px;
+      transition: background-color 0.3s;
+    }
+
+    .botao-presente:hover {
+      background-color: #f79793;
+    }
+
+    .botao-presente:disabled {
+      background-color: #e0cfd4;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .pix-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid #e0cfd4;
+    }
+
+    .qr-code {
+      width: 100%;
+      height: 250px;
+      background-color: #b6c558;
+      border: 2px dashed #cfd6a1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b76e79;
+      font-size: 20px;
+      border-radius: 10px;
+      margin-top: 15px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    input[type="text"].pix-link {
+      margin-top: 15px;
+      font-size: 18px;
+      padding: 16px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 16px;
+      background-color: #b76e79;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #922826;
+    }
+
+    @media (max-width: 600px) {
+      .formulario {
+        width: 100vw;
+        padding: 24px;
+        margin: 0;
+        border-radius: 0;
+      }
+
+      .botao-presente {
+        width: 100%;
+        font-size: 24px;
+        padding: 28px;
+      }
+
+      input[type="text"], .pix-link {
+        font-size: 20px;
+        padding: 20px;
+      }
+
+      label {
+        font-size: 20px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .qr-code {
+        height: 220px;
+        font-size: 18px;
+      }
+    }
+
+    #tsparticles {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+
+  .imagem-presente {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px;
+    border: 6px solid #d8a1b2;
+    box-shadow: 0 0 15px rgba(200, 150, 170, 0.4);
+    transition: transform 0.3s;
+  }
+
+  .imagem-presente:hover {
+    transform: scale(1.05);
+  }
+
+  #imagens-presentes {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  #imagem-expandida {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#imagem-expandida img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  cursor: pointer;
+}
+
+  </style>
+</head>
+<body>
+  <div id="tsparticles"></div>
+  <div class="formulario">
+    <h1>Lista de Presentes</h1>
+
+    <label for="nome">Seu nome:</label>
+    <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
+
+    <label>Escolha um presente:</label>
+    <div class="presentes" id="presentes"></div>
+
+<div id="descricao-paleta" style="text-align: center; font-size: 20px; color: #922826; margin-top: 30px;"></div>
+<div id="imagens-presentes" style="margin-top: 20px; display: none;"></div>
+
+    <div class="pix-section">
+      <label for="pix">Contribuição via Pix:</label>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; font-size: 40px; color: #b76e79; font-weight: bold;">
+          Jucileide Silva de Oliveira
+        </div>
+        <div style="flex: 1; max-width: 250px; margin-right: 20px;">
+          <img src="https://i.imgur.com/AfWmbQG.png" alt="QR Code Pix"
+            style="width: 100%; border-radius: 10px; border: 2px dashed #d8a1b2;">
+        </div>
+      </div>
+
+      <input type="text" class="pix-link" id="pix" name="pix"
+        value="00020126580014BR.GOV.BCB.PIX01369dea9f45-a174-41f4-a1eb-b614165cca525204000053039865802BR5925Jucileide Silva de Olivei6009SAO PAULO62140510YxfOis8tXz63047DB3"
+        readonly>
+
+      <button onclick="copiarPix()" style="font-size: 40px;">Copiar link do Pix</button>
+      <button onclick="enviarFormulario()" style="font-size: 40px; background-color: #6a0dad;">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+const listaPresentes = [
+  "Jogo de talheres (Tramontina)",
+  "Jogo de talheres (Tramontina)",
+  "Kit de Facas (Tramontina)",
+  "Jogo de copos",
+  "Jogo de pratos",
+  "Jogo de xícaras",
+  "Kit de conchas inox",
+  "Escorredor de prato inox",
+  "Kit de frigideira",
+  "Jarra de vidro grande",
+  "Garrafa de café",
+  "Kit de potes de mantimentos",
+  "Potes pequenos",
+  "Potes médios",
+  "Potes grandes",
+  "Sanduicheira",
+  "Jogo de panelas (antiaderente)",
+  "Panela de pressão",
+  "Lençol de casal",
+  "Cocha de cama casal",
+  "Cocha luva cama de casal",
+  "Protetor de coxão",
+  "Ventilador (preto)",
+  "Ferro de passar",
+  "Air fryer",
+  "Espelho grande",
+  "Mop",
+  "Cafeteira"
+];
+
+  const container = document.getElementById("presentes");
+  let presenteSelecionado = "";
+
+  // Busca os presentes já escolhidos no banco
+  fetch("https://casamento-gbz7.onrender.com/presentes")
+    .then(async res => {
+  if (!res.ok) {
+    const texto = await res.text();
+    throw new Error(texto);
+  }
+  return res.json();
+})
+    .then(dados => {
+      const bloqueados = dados.map(p => p.presente_escolhido);
+      renderizarPresentes(bloqueados);
+    })
+    .catch(err => {
+      console.error("Erro ao buscar presentes:", err);
+      renderizarPresentes([]);
+    });
+
+  const imagensPorPresente = {
+  "Jogo de talheres (Tramontina)": [
+    "/public/imagens/f1.webp",
+    "/public/imagens/f2.webp",
+    "/public/imagens/f3.webp",
+    "/public/imagens/f4.webp"
+  ],
+  
+  "Jogo de talheres (Tramontina)": [
+    "/public/imagens/f1.webp",
+    "/public/imagens/f2.webp",
+    "/public/imagens/f3.webp",
+    "/public/imagens/f4.webp"
+  ],
+
+  "Kit de Facas (Tramontina)": [
+    "/public/imagens/k1.webp",
+    "/public/imagens/k2.webp",
+    "/public/imagens/k3.webp",
+    "/public/imagens/k4.webp"
+  ],
+  "Jogo de copos": [
+    "/public/imagens/co1.webp",
+    "/public/imagens/co2.webp",
+    "/public/imagens/co3.webp",
+    "/public/imagens/co4.webp"
+  ],
+  "Jogo de pratos": [
+    "/public/imagens/pra.webp",
+    "/public/imagens/pra2.webp",
+    "/public/imagens/pra3.webp",
+    "/public/imagens/pra4.webp"
+  ],
+  "Jogo de xícaras": [
+    "/public/imagens/x1.webp",
+    "/public/imagens/x2.webp",
+    "/public/imagens/x3.webp",
+    "/public/imagens/x4.webp"
+  ],
+  "Kit de frigideira": [
+    "/public/imagens/fr1.webp",
+    "/public/imagens/fr2.webp",
+    "/public/imagens/fr3.webp",
+    "/public/imagens/fr4.webp"
+  ],
+  "Jarra de vidro grande": [
+    "/public/imagens/ja1.webp",
+    "/public/imagens/ja2.webp",
+    "/public/imagens/ja3.webp",
+    "/public/imagens/ja4.webp"
+  ],
+  "Garrafa de café": [
+    "/public/imagens/ca1.webp",
+    "/public/imagens/ca2.webp",
+    "/public/imagens/ca3.webp",
+    "/public/imagens/ca4.webp"
+  ],
+  "Kit de potes de mantimentos": [
+    "/public/imagens/m1.webp",
+    "/public/imagens/m2.webp",
+    "/public/imagens/m3.webp",
+    "/public/imagens/m4.webp"
+  ],
+  "Potes pequenos": [
+    "/public/imagens/po1.webp",
+    "/public/imagens/po2.webp",
+    "/public/imagens/po3.webp",
+    "/public/imagens/po4.webp"
+  ],
+  "Potes médios": [
+    "/public/imagens/pom1.webp",
+    "/public/imagens/pom2.webp",
+    "/public/imagens/pom3.webp",
+    "/public/imagens/pom4.webp"
+  ],
+  "Potes grandes": [
+    "/public/imagens/pog1.webp",
+    "/public/imagens/pog2.webp",
+    "/public/imagens/pog3.webp",
+    "/public/imagens/pog4.webp"
+  ],
+  "Sanduicheira": [
+    "/public/imagens/san1.webp",
+    "/public/imagens/san2.webp",
+    "/public/imagens/san3.webp",
+    "/public/imagens/san4.webp"
+  ],
+  "Jogo de panelas (antiaderente)": [
+    "/public/imagens/jg1.webp",
+    "/public/imagens/jg2.webp",
+    "/public/imagens/jg3.webp",
+    "/public/imagens/jg4.webp"
+  ],
+  "Panela de pressão": [
+    "/public/imagens/pp1.webp",
+    "/public/imagens/pp2.webp",
+    "/public/imagens/pp3.webp",
+    "/public/imagens/pp4.webp"
+  ],
+  "Lençol de casal": [
+    "/public/imagens/l1.webp",
+    "/public/imagens/l2.webp",
+    "/public/imagens/l3.webp",
+    "/public/imagens/l4.webp"
+  ],
+  "Cocha de cama casal": [
+    "/public/imagens/cam1.webp",
+    "/public/imagens/cam2.webp",
+    "/public/imagens/cam3.webp",
+    "/public/imagens/cam4.webp"
+  ],
+  "Cocha luva cama de casal": [
+    "/public/imagens/l1.webp",
+    "/public/imagens/l2.webp",
+    "/public/imagens/l3.webp",
+    "/public/imagens/l4.webp"
+  ],
+  "Protetor de coxão": [
+    "/public/imagens/l1.webp",
+    "/public/imagens/l2.webp",
+    "/public/imagens/l3.webp",
+    "/public/imagens/l4.webp"
+  ],
+  "Ventilador (preto)": [
+    "/public/imagens/v1.webp"
+  ],
+  "Ferro de passar": [
+    "/public/imagens/fe1.webp",
+    "/public/imagens/fe2.webp",
+    "/public/imagens/fe3.webp",
+    "/public/imagens/fe4.webp"
+  ],
+  "Air fryer": [
+    "/public/imagens/a1.webp",
+    "/public/imagens/a2.webp",
+    "/public/imagens/a3.webp",
+    "/public/imagens/a4.webp"
+  ],
+  "Espelho grande": [
+    "/public/imagens/e1.webp",
+    "/public/imagens/e2.webp",
+    "/public/imagens/e3.webp",
+    "/public/imagens/e4.webp"
+  ],
+  "Mop": [
+    "/public/imagens/mopp1.webp",
+    "/public/imagens/mopp2.webp",
+    "/public/imagens/mopp3.webp",
+    "/public/imagens/mopp4.webp"
+  ],
+  "Cafeteira": [
+    "/public/imagens/caf1.webp",
+    "/public/imagens/caf2.webp",
+    "/public/imagens/caf3.webp",
+    "/public/imagens/caf4.webp",
+  ]
+};
+
+  function renderizarPresentes(bloqueados) {
+    listaPresentes.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "botao-presente";
+      btn.textContent = item;
+      btn.disabled = bloqueados.includes(item);
+
+btn.onclick = () => {
+  presenteSelecionado = item;
+  alert(`Você selecionou: ${item}. Agora clique em "Enviar" para confirmar.`);
+
+  const containerImagens = document.getElementById("imagens-presentes");
+  const descricaoPaleta = document.getElementById("descricao-paleta");
+
+  containerImagens.innerHTML = "";
+  descricaoPaleta.innerHTML = "";
+
+  // Frase curta e educada
+  descricaoPaleta.innerHTML = `
+    <strong style="display:block; margin-bottom: 10px; font-size: 40px; color: #922826;">
+      Escolha esse presente nas cores que combinem com nosso dia especial. Exemplos:
+    </strong>
+  `;
+
+  const imagens = imagensPorPresente[item];
+
+if (imagens) {
+  imagens.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.className = "imagem-presente";
+    img.onclick = () => expandirImagem(src); // 👈 torna clicável
+    containerImagens.appendChild(img);
+  });
+  containerImagens.style.display = "flex";
+} else {
+  containerImagens.style.display = "none";
+}
+};
+
+      container.appendChild(btn);
+    });
+  }
+
+  function enviarFormulario() {
+    const nome = document.getElementById("nome").value.trim();
+    const dataAtual = new Date().toISOString().split("T")[0];
+
+    if (!nome) {
+      alert("Por favor, preencha seu nome antes de enviar.");
+      return;
+    }
+
+    if (!presenteSelecionado) {
+      alert("Por favor, escolha um presente antes de enviar.");
+      return;
+    }
+
+    fetch("https://casamento-gbz7.onrender.com/presentes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome,
+        data_presente: dataAtual,
+        presente_escolhido: presenteSelecionado
+      })
+    })
+    .then(response => response.text())
+.then(data => {
+  alert(`Obrigado, ${nome}! Sua escolha foi registrada com sucesso.`);
+  window.location.href = "obrigado.html";
+
+  // Desabilita o botão do presente escolhido
+  const botoes = document.querySelectorAll(".botao-presente");
+  botoes.forEach(btn => {
+    if (btn.textContent === presenteSelecionado) {
+      btn.disabled = true;
+    }
+  });
+
+  presenteSelecionado = ""; // limpa a seleção
+})
+    .catch(error => {
+      console.error("Erro ao enviar:", error);
+      alert("Ocorreu um erro ao registrar sua escolha.");
+    });
+  }
+
+  function copiarPix() {
+    const pixInput = document.getElementById("pix");
+    const valorPix = pixInput.value.trim();
+    if (valorPix.length > 0) {
+      navigator.clipboard.writeText(valorPix);
+    } else {
+      alert("O campo do Pix está vazio.");
+    }
+  }
+</script>
+<script>
+tsParticles.load("tsparticles", {
+  fullScreen: { enable: false },
+  particles: {
+    number: { value: 20 },
+    shape: {
+      type: "image",
+      image: {
+        src: "https://i.imgur.com/0Z8Yw7A.png", // imagem de flor
+        width: 32,
+        height: 32
+      }
+    },
+    size: { value: 20 },
+    move: {
+      direction: "bottom",
+      speed: 1,
+      outModes: { default: "out" }
+    },
+    opacity: { value: 0.8 }
+  },
+  background: { color: "#fdfaf9" }
+});
+
+  function expandirImagem(src) {
+    const modal = document.getElementById("imagem-expandida");
+    const img = modal.querySelector("img");
+    img.src = src;
+    modal.style.display = "flex";
+  }
+
+  function fecharImagemExpandida() {
+    document.getElementById("imagem-expandida").style.display = "none";
+  }
+
+
+</script>
+<div id="imagem-expandida" onclick="fecharImagemExpandida()">
+  <img src="" alt="Imagem expandida">
+</div>
+</body>
+</html>

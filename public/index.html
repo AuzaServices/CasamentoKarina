@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" href="https://i.imgur.com/emsb2Bn.png" type="image/png">
+  <meta property="og:title" content="Convite de Casamento — Jhucy & Gabriel">
+  <meta property="og:description" content="Venha celebrar esse momento especial conosco.">
+  <meta property="og:image" content="https://i.imgur.com/emsb2Bn.png">
+  <meta property="og:url" content="https://casamento-0byc.onrender.com">
+  <meta property="og:type" content="website">
+  <meta charset="UTF-8">
+  <title>Splash Envelope</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background-color: #fff;
+    }
+
+    .splash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease;
+      z-index: 9999;
+      background-color: #fff;
+    }
+
+.splash img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+    .fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="splash" id="splash">
+    <img src="convite.png" alt="Envelope">
+  </div>
+
+  <script>
+    const splash = document.getElementById("splash");
+
+    splash.addEventListener("click", () => {
+      splash.classList.add("fade-out");
+
+      // Aguarda a transição antes de redirecionar
+      setTimeout(() => {
+        window.location.href = "splash.html";
+      }, 1000); // tempo da transição em milissegundos
+    });
+  </script>
+
+</body>
+</html>

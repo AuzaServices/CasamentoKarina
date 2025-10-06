@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" href="https://i.imgur.com/lw1nRbq.png" type="image/png">
+  <meta property="og:title" content="Convite de Casamento — Jhucy & Gabriel">
+  <meta property="og:description" content="Venha celebrar esse momento especial conosco.">
+  <meta property="og:image" content="https://i.imgur.com/wWL3UmJ.png">
+  <meta property="og:url" content="https://casamento-0byc.onrender.com">
+  <meta property="og:type" content="website">
+  <meta charset="UTF-8">
+  <title>Casamento Jhucy & Gabriel</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .imagem-container {
+      position: relative;
+      width: 100vw;
+      height: auto;
+    }
+
+    .imagem-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .botao-fantasma,
+    .botao-localizacao,
+    .botao-whatsapp {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+    }
+
+    .botao-fantasma {
+      top: 4327px;
+      right: 155px;
+    }
+
+    .botao-localizacao {
+      top: 4327px;
+      right: 730px;
+    }
+
+    .botao-whatsapp {
+      top: 4327px;
+      right: 437px;
+      background: transparent;
+      border: none;
+    }
+
+    .botao-musica {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      top: 994px;
+      left: 440px;
+      z-index: 999;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+<div class="imagem-container">
+  <video autoplay muted loop playsinline width="100%">
+    <source src="video.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+  </video>
+  <a href="agendamento.html" class="botao-fantasma"></a>
+  <a href="https://maps.app.goo.gl/WH5Mmdni9L7raMbw8" class="botao-localizacao"></a>
+  <a href="https://wa.me/5585994327576?text=Oii%20Jhucy%2C%20t%C3%B4%20passando%20pra%20confirmar%20a%20minha%20presen%C3%A7a%20nesse%20dia%20muito%20especial%2C%20Seu%20casamento." class="botao-whatsapp" target="_blank"></a>
+  <button id="botao-musica" class="botao-musica"></button>
+</div>
+
+  <audio id="audio-musica" src="https://cdn.jsdelivr.net/gh/AuzaServices/Casamento2/SaveGram.mp3"></audio>
+
+  <script>
+    const botaoMusica = document.getElementById("botao-musica");
+    const audio = document.getElementById("audio-musica");
+
+    botaoMusica.addEventListener("click", () => {
+      audio.play();
+    });
+  </script>
+</body>
+</html>
