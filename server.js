@@ -13,10 +13,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Conexão com o banco de dados
 const db = mysql.createPool({
-  host: "sql10.freesqldatabase.com",
-  user: "sql10799195",
-  password: "rT9BIiqNUY",
-  database: "sql1079995",
+  host: "",
+  user: "",
+  password: "",
+  database: "",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
