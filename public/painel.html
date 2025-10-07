@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <link rel="icon" href="https://i.imgur.com/EPY1TsS.pg" type="image/png">
+  <link rel="icon" href="https://i.imgur.com/EPY1TsS.png" type="image/png">
   <meta property="og:title" content="Painel de Presentes">
   <meta property="og:description" content="Acompanhe os presentes de Karina e Geraldo.">
-  <meta property="og:image" content="https://i.imgur.com/EPY1TsS.pn">
+  <meta property="og:image" content="https://i.imgur.com/EPY1TsS.png">
   <meta property="og:url" content="https://casamento-0byc.onrender.com">
   <meta property="og:type" content="website">
-
   <meta charset="UTF-8">
   <title>Painel de Presentes</title>
+
+  <!-- tsParticles para estrelas flutuantes -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #fdfdfd;
       margin: 0;
       padding: 40px;
+      position: relative;
+      overflow: hidden;
     }
 
     h1 {
       text-align: center;
       color: #922826;
       margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
     }
 
     th, td {
@@ -48,9 +57,21 @@
     tr:hover {
       background-color: #e0cfd4;
     }
+
+    /* Container das partículas */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
   </style>
 </head>
 <body>
+  <div id="particles-js"></div>
+
   <h1>Painel de Presentes</h1>
   <table>
     <thead>
@@ -72,37 +93,55 @@
     }
 
     function carregarDados() {
-fetch("https://casamentokarina.onrender.com/presentes")
-  .then(res => res.json())
-  .then(dados => {
-    if (!Array.isArray(dados)) {
-      console.error("Resposta inesperada:", dados);
-      throw new Error("Dados recebidos não são uma lista.");
-    }
+      fetch("https://casamentokarina.onrender.com/presentes")
+        .then(res => res.json())
+        .then(dados => {
+          if (!Array.isArray(dados)) {
+            console.error("Resposta inesperada:", dados);
+            throw new Error("Dados recebidos não são uma lista.");
+          }
 
-    const tabela = document.getElementById("tabela-dados");
-    tabela.innerHTML = "";
+          const tabela = document.getElementById("tabela-dados");
+          tabela.innerHTML = "";
 
-    dados.forEach(item => {
-      const linha = document.createElement("tr");
-      linha.innerHTML = `
-        <td>${item.nome}</td>
-        <td>${formatarData(item.data_presente)}</td>
-        <td>${item.presente_escolhido}</td>
-      `;
-      tabela.appendChild(linha);
-    });
-  })
-  .catch(err => {
-    console.error("Erro ao carregar dados:", err);
-    const tabela = document.getElementById("tabela-dados");
-    tabela.innerHTML = `<tr><td colspan="3">Erro ao carregar dados do servidor.</td></tr>`;
-  });
-
+          dados.forEach(item => {
+            const linha = document.createElement("tr");
+            linha.innerHTML = `
+              <td>${item.nome}</td>
+              <td>${formatarData(item.data_presente)}</td>
+              <td>${item.presente_escolhido}</td>
+            `;
+            tabela.appendChild(linha);
+          });
+        })
+        .catch(err => {
+          console.error("Erro ao carregar dados:", err);
+          const tabela = document.getElementById("tabela-dados");
+          tabela.innerHTML = `<tr><td colspan="3">Erro ao carregar dados do servidor.</td></tr>`;
+        });
     }
 
     carregarDados();
     setInterval(carregarDados, 5000);
+
+    // Configuração das partículas
+    tsParticles.load("particles-js", {
+      fullScreen: { enable: false },
+      background: { color: "#fdfdfd" },
+      particles: {
+        number: { value: 40 },
+        color: { value: "#f79793" },
+        shape: { type: "star" },
+        opacity: { value: 0.8 },
+        size: { value: 3 },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "top",
+          outModes: { default: "out" }
+        }
+      }
+    });
   </script>
 </body>
 </html>
