@@ -22,7 +22,7 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-// Teste de conexão com uma query simples
+// Teste de conexão
 db.query("SELECT 1", (err) => {
   if (err) {
     console.error("Erro ao conectar no banco:", err.message);
@@ -49,15 +49,34 @@ app.post("/presentes", (req, res) => {
   });
 });
 
-// Rota para listar presentes escolhidos
+// Rota para listar presentes escolhidos (com ID)
 app.get("/presentes", (req, res) => {
-  const sql = "SELECT nome, data_presente, presente_escolhido FROM presentes";
+  const sql = "SELECT id, nome, data_presente, presente_escolhido FROM presentes";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Erro ao buscar presentes:", err.message);
       return res.status(500).json({ erro: "Erro ao consultar o banco", detalhes: err.message });
     }
     res.json(results);
+  });
+});
+
+// Rota para deletar presente por ID
+app.delete("/presentes/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sql = "DELETE FROM presentes WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Erro ao apagar presente:", err);
+      return res.status(500).send("Erro ao apagar do banco");
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Presente não encontrado");
+    }
+
+    res.send("Presente apagado com sucesso!");
   });
 });
 

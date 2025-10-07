@@ -9,10 +9,7 @@
   <meta property="og:type" content="website">
   <meta charset="UTF-8">
   <title>Painel de Presentes</title>
-
-  <!-- tsParticles para estrelas flutuantes -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,7 +19,6 @@
       position: relative;
       overflow: hidden;
     }
-
     h1 {
       text-align: center;
       color: #922826;
@@ -30,7 +26,6 @@
       position: relative;
       z-index: 1;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -38,27 +33,21 @@
       position: relative;
       z-index: 1;
     }
-
     th, td {
       padding: 16px;
       border: 1px solid #ddd;
       text-align: left;
     }
-
     th {
       background-color: #f79793;
       color: white;
     }
-
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
-
     tr:hover {
       background-color: #e0cfd4;
     }
-
-    /* Container das partículas */
     #particles-js {
       position: fixed;
       top: 0;
@@ -67,11 +56,53 @@
       height: 100%;
       z-index: 0;
     }
+    .btn-apagar {
+      background-color: #922826;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .btn-apagar:hover {
+      background-color: #b93c3a;
+    }
+    #modal-confirmacao {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    #modal-box {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    #modal-box button {
+      margin: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #confirmar-apagar {
+      background-color: #922826;
+      color: white;
+    }
+    #cancelar-apagar {
+      background-color: #ccc;
+    }
   </style>
 </head>
 <body>
   <div id="particles-js"></div>
-
   <h1>Painel de Presentes</h1>
   <table>
     <thead>
@@ -79,14 +110,24 @@
         <th>Nome</th>
         <th>Data</th>
         <th>Presente</th>
+        <th>Ação</th>
       </tr>
     </thead>
-    <tbody id="tabela-dados">
-      <!-- Dados serão inseridos aqui -->
-    </tbody>
+    <tbody id="tabela-dados"></tbody>
   </table>
 
+  <!-- Modal de confirmação -->
+  <div id="modal-confirmacao">
+    <div id="modal-box">
+      <p>Tem certeza que deseja apagar esse registro?</p>
+      <button id="confirmar-apagar">Apagar</button>
+      <button id="cancelar-apagar">Cancelar</button>
+    </div>
+  </div>
+
   <script>
+    let idParaApagar = null;
+
     function formatarData(dataString) {
       const [ano, mes, dia] = dataString.split("T")[0].split("-");
       return `${dia}/${mes}/${ano.slice(-2)}`;
@@ -96,11 +137,6 @@
       fetch("https://casamentokarina.onrender.com/presentes")
         .then(res => res.json())
         .then(dados => {
-          if (!Array.isArray(dados)) {
-            console.error("Resposta inesperada:", dados);
-            throw new Error("Dados recebidos não são uma lista.");
-          }
-
           const tabela = document.getElementById("tabela-dados");
           tabela.innerHTML = "";
 
@@ -110,21 +146,48 @@
               <td>${item.nome}</td>
               <td>${formatarData(item.data_presente)}</td>
               <td>${item.presente_escolhido}</td>
+              <td><button class="btn-apagar" onclick="abrirModal(${item.id})">Apagar</button></td>
             `;
             tabela.appendChild(linha);
           });
         })
         .catch(err => {
           console.error("Erro ao carregar dados:", err);
-          const tabela = document.getElementById("tabela-dados");
-          tabela.innerHTML = `<tr><td colspan="3">Erro ao carregar dados do servidor.</td></tr>`;
+          document.getElementById("tabela-dados").innerHTML = `<tr><td colspan="4">Erro ao carregar dados do servidor.</td></tr>`;
         });
     }
+
+    function abrirModal(id) {
+      idParaApagar = id;
+      document.getElementById("modal-confirmacao").style.display = "flex";
+    }
+
+    function fecharModal() {
+      idParaApagar = null;
+      document.getElementById("modal-confirmacao").style.display = "none";
+    }
+
+    document.getElementById("cancelar-apagar").onclick = fecharModal;
+
+    document.getElementById("confirmar-apagar").onclick = () => {
+      if (!idParaApagar) return;
+      fetch(`https://casamentokarina.onrender.com/presentes/${idParaApagar}`, {
+        method: "DELETE"
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao apagar");
+        fecharModal();
+        carregarDados();
+      })
+      .catch(err => {
+        console.error("Erro ao apagar:", err);
+        fecharModal();
+      });
+    };
 
     carregarDados();
     setInterval(carregarDados, 5000);
 
-    // Configuração das partículas
     tsParticles.load("particles-js", {
       fullScreen: { enable: false },
       background: { color: "#fdfdfd" },
