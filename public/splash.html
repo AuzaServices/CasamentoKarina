@@ -23,35 +23,35 @@
       height: auto;
     }
 
-    .imagem-container video {
+    .imagem-container img {
       width: 100%;
       height: auto;
       display: block;
     }
 
-    .botao-fantasma,
-    .botao-localizacao,
-    .botao-whatsapp {
-      position: absolute;
-      width: 600px;
-      height: 60px;
-      cursor: pointer;
-      border-radius: 12px;
-    }
+.botao-fantasma,
+.botao-localizacao,
+.botao-whatsapp {
+  position: absolute;
+  width: 600px;       /* mais largo */
+  height: 60px;       /* mais achatado */
+  cursor: pointer;
+  border-radius: 12px; /* bordas arredondadas como no exemplo */
+}
 
     .botao-fantasma {
-      top: 4710px;
-      left: 194px;
+      top: 4327px;
+      right: 155px;
     }
 
     .botao-localizacao {
-      top: 4554px;
-      left: 194px;
+      top: 4327px;
+      right: 730px;
     }
 
     .botao-whatsapp {
-      top: 4633px;
-      left: 192px;
+      top: 4327px;
+      right: 437px;
       background: transparent;
       border: none;
     }
@@ -68,28 +68,36 @@
       background: transparent;
     }
 
-    #app {
-      position: relative;
-      z-index: 1;
-    }
+
+.botao-localizacao {
+    top: 4554px;
+    left: 194px;
+}
+
+.botao-whatsapp {
+    top: 4633px;
+    left: 192px;
+}
+
+.botao-fantasma {
+    top: 4710px;
+    left: 194px;
+}
   </style>
 </head>
 <body>
+<div class="imagem-container">
+<video autoplay muted loop playsinline preload="auto" width="100%" style="display: block; max-width: 100%; height: auto;">
+  <source src="https://res.cloudinary.com/dzwkr47ib/video/upload/v1759851076/Karina_E_Gerardo_2_q3lpiq.mp4" type="video/mp4">
+  Seu navegador não suporta vídeo.
+</video>
+  <a href="agendamento.html" class="botao-fantasma"></a>
+  <a href="https://maps.app.goo.gl/1faNLMUr8SdDWAG46" class="botao-localizacao"></a>
+  <a href="https://wa.me/5585991864931?text=Oii%20Karina%2C%20t%C3%B4%20passando%20pra%20confirmar%20a%20minha%20presen%C3%A7a%20nesse%20dia%20muito%20especial%2C%20Seu%20casamento." class="botao-whatsapp" target="_blank"></a>
+  <button id="botao-musica" class="botao-musica"></button>
+</div>
+
   <audio id="audio-musica" src="https://cdn.jsdelivr.net/gh/AuzaServices/Casamento2/SaveGram.mp3"></audio>
-
-  <div class="imagem-container">
-    <video autoplay muted loop playsinline preload="auto">
-      <source src="https://res.cloudinary.com/dzwkr47ib/video/upload/v1759851076/Karina_E_Gerardo_2_q3lpiq.mp4" type="video/mp4">
-      Seu navegador não suporta vídeo.
-    </video>
-
-    <button class="botao-fantasma" onclick="navegar('agendamento.html')"></button>
-    <a href="https://maps.app.goo.gl/1faNLMUr8SdDWAG46" class="botao-localizacao"></a>
-    <a href="https://wa.me/5585991864931?text=Oii%20Karina%2C%20t%C3%B4%20passando%20pra%20confirmar%20a%20minha%20presen%C3%A7a%20nesse%20dia%20muito%20especial%2C%20Seu%20casamento." class="botao-whatsapp" target="_blank"></a>
-    <button id="botao-musica" class="botao-musica"></button>
-  </div>
-
-  <div id="app"></div>
 
   <script>
     const botaoMusica = document.getElementById("botao-musica");
@@ -98,19 +106,6 @@
     botaoMusica.addEventListener("click", () => {
       audio.play();
     });
-
-    function navegar(pagina) {
-      fetch(pagina)
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("app").innerHTML = html;
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        })
-        .catch(err => {
-          document.getElementById("app").innerHTML = "<p>Erro ao carregar conteúdo.</p>";
-          console.error("Erro ao carregar página SPA:", err);
-        });
-    }
   </script>
 </body>
 </html>
