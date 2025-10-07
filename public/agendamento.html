@@ -279,7 +279,7 @@ const listaPresentes = [
   let presenteSelecionado = "";
 
   // Busca os presentes já escolhidos no banco
-  fetch("https://casamento-gbz7.onrender.com/presentes")
+  fetch("https://casamentokarina.onrender.com/presentes")
     .then(async res => {
   if (!res.ok) {
     const texto = await res.text();
@@ -512,7 +512,7 @@ if (imagens) {
       return;
     }
 
-    fetch("https://casamento-gbz7.onrender.com/presentes", {
+    fetch("https://casamentokarina.onrender.com/presentes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
