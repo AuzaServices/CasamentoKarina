@@ -17,6 +17,15 @@
       overflow-y: auto;
     }
 
+    body {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
     .imagem-container {
       position: relative;
       width: 100vw;
@@ -29,29 +38,29 @@
       display: block;
     }
 
-.botao-fantasma,
-.botao-localizacao,
-.botao-whatsapp {
-  position: absolute;
-  width: 600px;       /* mais largo */
-  height: 60px;       /* mais achatado */
-  cursor: pointer;
-  border-radius: 12px; /* bordas arredondadas como no exemplo */
-}
+    .botao-fantasma,
+    .botao-localizacao,
+    .botao-whatsapp {
+      position: absolute;
+      width: 600px;
+      height: 60px;
+      cursor: pointer;
+      border-radius: 12px;
+    }
 
     .botao-fantasma {
-      top: 4327px;
-      right: 155px;
+      top: 4710px;
+      left: 194px;
     }
 
     .botao-localizacao {
-      top: 4327px;
-      right: 730px;
+      top: 4554px;
+      left: 194px;
     }
 
     .botao-whatsapp {
-      top: 4327px;
-      right: 437px;
+      top: 4633px;
+      left: 192px;
       background: transparent;
       border: none;
     }
@@ -67,35 +76,17 @@
       border: none;
       background: transparent;
     }
-
-
-.botao-localizacao {
-    top: 4554px;
-    left: 194px;
-}
-
-.botao-whatsapp {
-    top: 4633px;
-    left: 192px;
-}
-
-.botao-fantasma {
-    top: 4710px;
-    left: 194px;
-}
   </style>
 </head>
 <body>
-<div class="imagem-container">
-<video autoplay muted loop playsinline preload="auto" width="100%" style="display: block; max-width: 100%; height: auto;">
-  <source src="https://res.cloudinary.com/dzwkr47ib/video/upload/v1759851076/Karina_E_Gerardo_2_q3lpiq.mp4" type="video/mp4">
-  Seu navegador não suporta vídeo.
-</video>
-  <a href="agendamento.html" class="botao-fantasma"></a>
-  <a href="https://maps.app.goo.gl/1faNLMUr8SdDWAG46" class="botao-localizacao"></a>
-  <a href="https://wa.me/5585991864931?text=Oii%20Karina%2C%20t%C3%B4%20passando%20pra%20confirmar%20a%20minha%20presen%C3%A7a%20nesse%20dia%20muito%20especial%2C%20Seu%20casamento." class="botao-whatsapp" target="_blank"></a>
-  <button id="botao-musica" class="botao-musica"></button>
-</div>
+  <div class="imagem-container">
+    <img src="/public/imagem.png" alt="Imagem do casamento" style="display: block; max-width: 100%; height: auto;" />
+
+    <a href="agendamento.html" class="botao-fantasma"></a>
+    <a href="https://maps.app.goo.gl/1faNLMUr8SdDWAG46" class="botao-localizacao"></a>
+    <a href="https://wa.me/5585991864931?text=Oii%20Karina%2C%20t%C3%B4%20passando%20pra%20confirmar%20a%20minha%20presen%C3%A7a%20nesse%20dia%20muito%20especial%2C%20Seu%20casamento." class="botao-whatsapp" target="_blank"></a>
+    <button id="botao-musica" class="botao-musica"></button>
+  </div>
 
   <audio id="audio-musica" src="https://cdn.jsdelivr.net/gh/AuzaServices/Casamento2/SaveGram.mp3"></audio>
 
@@ -105,6 +96,13 @@
 
     botaoMusica.addEventListener("click", () => {
       audio.play();
+    });
+
+    // Aplica fade-in assim que o DOM estiver pronto
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('fade-in');
+      });
     });
   </script>
 </body>

@@ -31,21 +31,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 1s ease;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
       z-index: 9999;
       background-color: #fff;
     }
 
-.splash img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
-}
+    .splash.visible {
+      opacity: 1;
+    }
 
-    .fade-out {
+    .splash.fade-out {
       opacity: 0;
       pointer-events: none;
+    }
+
+    .splash img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -58,15 +63,30 @@
   <script>
     const splash = document.getElementById("splash");
 
-    splash.addEventListener("click", () => {
-      splash.classList.add("fade-out");
+    // Aplica fade-in ao carregar
+    window.addEventListener("DOMContentLoaded", () => {
+      requestAnimationFrame(() => {
+        splash.classList.add("visible");
+      });
+    });
 
-      // Aguarda a transição antes de redirecionar
+    // Ao clicar, aplica fade-out e redireciona
+    splash.addEventListener("click", () => {
+      splash.classList.remove("visible");
+      splash.classList.add("fade-out");
       setTimeout(() => {
         window.location.href = "splash.html";
-      }, 1000); // tempo da transição em milissegundos
+      }, 1000);
     });
-  </script>
 
+    // Ou redireciona automaticamente após 3 segundos
+    setTimeout(() => {
+      splash.classList.remove("visible");
+      splash.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = "splash.html";
+      }, 1000);
+    }, 3000);
+  </script>
 </body>
 </html>
